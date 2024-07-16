@@ -1,34 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { searchMovies } from "../../movies-api.js";
 import MovieList from "../../components/MovieList/MovieList";
 import css from "./MoviesPage.module.css";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function MoviesPage() {
     const [movies, setMovies] = useState([]);
     const [query, setQuery] = useState("");
-    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    useEffect(() => {
+        const queryParam = searchParams.get("query");
+        if (queryParam) {
+            setQuery(queryParam);
+            handleSearch(queryParam);
+        }
+    }, [searchParams]);
 
     const handleInputChange = (e) => {
         setQuery(e.target.value);
     };
 
-    const handleSearch = async (e) => {
+    const handleSearch = async (searchQuery) => {
+        if (!searchQuery.trim()) return;
+
+        try {
+            const data = await searchMovies(searchQuery);
+            setMovies(data);
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        }
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         if (!query.trim()) return;
 
-        try {
-            const data = await searchMovies(query);
-            setMovies(data);
-            navigate('/movies', { state: { movies: data, query } });
-        } catch (error) {
-            console.log("Error!");
-        }
+        setSearchParams({ query });
     };
 
     return (
         <div>
-            <form onSubmit={handleSearch} className={css.form}>
+            <form onSubmit={handleSubmit} className={css.form}>
                 <input
                     type="text"
                     value={query}
