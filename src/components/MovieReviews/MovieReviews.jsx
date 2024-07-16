@@ -22,13 +22,17 @@ export default function MovieReviews() {
 
     return (
         <div>
-            <ul>
-                {reviews.map(review => (
-                    <li key={review.id} className={css.list}>
-                        <p>{review.content}</p>
-                    </li>
-                ))}
-            </ul>
+            {reviews.length === 0 ? (
+                <p>No reviews available.</p>
+            ) : (
+                <ul>
+                    {reviews.map((review) => (
+                        <li key={review.id} className={css.list}>
+                            <p>{review.content || "No content available for this review."}</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
