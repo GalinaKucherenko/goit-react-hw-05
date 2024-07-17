@@ -8,7 +8,7 @@ export default function MovieDetailsPage() {
     const { movieId } = useParams();
     const [movie, setMovie] = useState(null);
     const location = useLocation();
-    const backLinkRef = useRef(location.state?.from ?? { pathname: "/movies" });
+    const backLinkRef = useRef(location.state?.from ?? { pathname: "/movies", search: location.state?.search });
 
     useEffect(() => {
         async function fetchMovie() {
@@ -30,8 +30,7 @@ export default function MovieDetailsPage() {
         <div>
             <Link
                 className={css.btn}
-                to={backLinkRef.current.pathname}
-                state={{ movies: backLinkRef.current.state?.movies, query: backLinkRef.current.state?.query }}
+                to={backLinkRef.current.pathname + backLinkRef.current.search}
             >
                 Go back
             </Link>

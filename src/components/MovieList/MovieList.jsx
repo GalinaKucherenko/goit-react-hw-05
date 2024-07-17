@@ -9,7 +9,7 @@ export default function MovieList({ movies }) {
             {movies.map((movie) => (
                 <li className={css.li} key={movie.id}>
                     <Link className={css.list} to={`/movies/${movie.id}`}
-                        state={{ from: { pathname: location.pathname, state: { movies, query: location.state?.query } } }}
+                        state={{ from: location, search: location.search}}
                     >{movie.title}</Link>
                     <img className={css.img} src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
                 </li>
